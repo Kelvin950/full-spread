@@ -1,32 +1,35 @@
-package server 
+package server
 
- import  (
+import (
 	"github.com/gin-gonic/gin"
- )
+	"github.com/kelvin950/spread/internals/core/ports"
+)
 
 type Server struct {
- 
-	Router  *gin.Engine
+	Router *gin.Engine
+	Api    ports.Api
 }
 
+func NewServer(api ports.Api) *Server {
 
-func NewServer()*Server{
+	s := &Server{}
 
+	s.Api = api
+	s.Start()
 
-	
-
- 	 s := &Server{} 
-
-	 s.Start()
-
-	 return s 
+	return s
 }
 
-func(s *Server) Start(){
- 
-router := gin.Default()
- 
+func (s Server) UploadController(apiV1 *gin.RouterGroup) {
 
+	apiV1.POST("/createupload", s.CreateMultiPartUpload())
+	apiV1.POST("/getPresign", s.CreatePresignMultiPart())
+	apiV1.POST("/completeupload", s.CompleteMultiPart())
+}
+func (s *Server) Start() {
 
-s.Router =  router
+	router := gin.Default()
+	apiV1 := router.Group("/api/v1")
+	s.UploadController(apiV1)
+	s.Router = router
 }

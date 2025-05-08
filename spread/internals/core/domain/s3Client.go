@@ -1,34 +1,34 @@
-package domain 
+package domain
 
-
-type CreateMultiPartUpload struct{
-Key *string  `json:"key"`
-BucketName *string  `json:"bucket_name"`
-
+type CreateMultiPartUpload struct {
+	Key        *string `json:"key"`
+	BucketName *string `json:"bucket_name"`
 }
 
-
-type  UplaodMultiPart struct {
-Bucket  *string `json:"bucket"`
-UploadId  *string  `json:"upload_id"` 
-Key *string `json:"key"`
-PartNumber *int32 `json:"part_number"`
+type UplaodMultiPart struct {
+	Bucket     *string `json:"bucket"`
+	UploadId   *string `json:"upload_id"`
+	Key        *string `json:"key"`
+	PartNumber *int32  `json:"part_number"`
 }
 
-
-type  CompleteMultiPart struct{
-Bucket  *string `json:"bucket"`
-UploadId  *string  `json:"upload_id"` 
-Key *string `json:"key"`
-*MultipartUpload
+type UplaodMultiPartApiRes struct {
+	PartNumber int32  `json:"part_number"`
+	Url        string `json:"url"`
 }
 
-type MultipartUpload struct{
-
-	Part  []Parts
+type CompleteMultiPart struct {
+	Bucket   *string `json:"bucket"`
+	UploadId *string `json:"upload_id"`
+	Key      *string `json:"key"`
+	*MultipartUpload
 }
 
-type Parts struct{
-	Etag *string `json:"etag"` 
-	PartNumber *int32 `json:"part_number"`
+type MultipartUpload struct {
+	Part []Parts
+}
+
+type Parts struct {
+	Etag       *string `json:"etag"`
+	PartNumber *int32  `json:"part_number"`
 }
