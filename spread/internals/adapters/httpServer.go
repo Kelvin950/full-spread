@@ -2,7 +2,7 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/kelvin950/spread/internals/core/ports"
+	"github.com/kelvin950/spread/internals/ports"
 )
 
 type Server struct {

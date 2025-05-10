@@ -24,7 +24,10 @@ type S3 struct {
 
 func NewS3(cfg aws.Config, expiresin time.Duration) *S3 {
 
-	s3Client := s3.NewFromConfig(cfg)
+	
+	s3Client := s3.NewFromConfig(cfg , func(o *s3.Options) {
+		o.UseAccelerate= true
+	})
 	presignClient := s3.NewPresignClient(s3Client, func(po *s3.PresignOptions) {
 		po.Expires = expiresin
 	})
