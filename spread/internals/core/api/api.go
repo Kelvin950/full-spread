@@ -2,13 +2,14 @@ package api
 
 import (
 	"context"
-	"fmt"
-	"sync"
+	
+
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/kelvin950/spread/internals/core/domain"
 	"github.com/kelvin950/spread/internals/core/s3"
+	"golang.org/x/sync/errgroup"
 )
 
 type IApi interface {
@@ -33,6 +34,13 @@ func NewApiMock() *Api {
 	}
 }
 
+func NewApItest(s s3.IS3) *Api{
+
+	return  &Api{
+		S3Client: s,
+	}
+}
+
 func (a Api) CreateMultiPartUpload(data domain.CreateMultiPartUpload) (string, error) {
 
 	output, err := a.S3Client.CreateMultiPartUpload(context.Background(), data)
@@ -49,62 +57,36 @@ func (a Api) CreateMultiPartUpload(data domain.CreateMultiPartUpload) (string, e
 
 func (a Api) CreatePresignMultiPart(data []domain.UplaodMultiPart) ([]domain.UplaodMultiPartApiRes, error) {
 
-	var wg sync.WaitGroup
-	errCh := make(chan error, len(data))
-	resCh := make(chan domain.UplaodMultiPartApiRes, len(data))
-	resData := make([]domain.UplaodMultiPartApiRes, 0, len(data))
-	concurrencyLimit := 20
-	semaphore := make(chan struct{}, concurrencyLimit)
 
-	for _, d := range data {
-		d := d
-		wg.Add(1)
+	resData := make([]domain.UplaodMultiPartApiRes,  len(data)+1)
+	
 
-		go func(u domain.UplaodMultiPart) {
-			defer wg.Done()
+	errGrp  , ctx := errgroup.WithContext(context.Background())
+	errGrp.SetLimit(2)
 
-			semaphore <- struct{}{}
 
-			output, err := a.S3Client.CreatePresignMultiPart(context.Background(), u)
-			fmt.Println(err)
-			if err != nil {
+	for _, d:= range  data{
 
-				errCh <- err
-				<-semaphore
-				return
-			}
+		func(d domain.UplaodMultiPart){
+ 
+			errGrp.Go(func() error {
 
-			resCh <- domain.UplaodMultiPartApiRes{
-				PartNumber: *u.PartNumber,
-				Url:        output.URL,
-			}
+				resp ,err := a.S3Client.CreatePresignMultiPart(ctx , d) 
+					if err==nil{
+						resData[*d.PartNumber] = domain.UplaodMultiPartApiRes{
+							Url: resp.URL,
+							PartNumber: *d.PartNumber,
+						}
+					}
 
-			<-semaphore
+					
+				return err 
+
+			})
 		}(d)
-
 	}
 
-	go func() {
-		wg.Wait()
-		close(errCh)
-		close(resCh)
-	}()
-
-	for err := range errCh {
-
-		if err != nil {
-
-			return nil, err
-		}
-	}
-
-	for resp := range resCh {
-
-		resData = append(resData, resp)
-
-	}
-	return resData, nil
-
+	return resData , errGrp.Wait()
 }
 
 func (a Api) CompleteMultiPart(data domain.CompleteMultiPart) (string, error) {
