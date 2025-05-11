@@ -1,6 +1,7 @@
 package server
 
 import (
+
 	"fmt"
 	"net/http"
 
@@ -86,6 +87,51 @@ func (s *Server) CreatePresignMultiPart() gin.HandlerFunc {
 func (s *Server) CompleteMultiPart() gin.HandlerFunc {
 
 	return func(ctx *gin.Context) {
+  
+		var req  CompleteMultiPartReq 
+
+		if err := ctx.ShouldBindBodyWithJSON(&req) ;err!=nil{
+			
+			ctx.JSON(http.StatusBadRequest , gin.H{
+				"error":err.Error() ,
+			})
+			return 
+		}
+
+      
+		part := []domain.Parts{}
+		for _ , r:=range req.Parts{
+			part=append(part, domain.Parts{
+				Etag: r.Etag,
+				PartNumber: r.PartNumber,
+			})
+		}
+
+		
+	
+		input :=  domain.CompleteMultiPart{
+			Bucket : aws.String(req.Bucket) ,
+	UploadId : aws.String(req.UploadId)  ,
+	Key      : aws.String(req.Key) ,
+	 MultipartUpload: &domain.MultipartUpload{
+		Part: part ,
+	 },
+		}
+
+
+		res, err:= s.Api.CompleteMultiPart(input)
+
+		if err!=nil{
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error":err.Error() ,
+			})
+			return 
+		}
+
+			ctx.JSON(http.StatusOK, gin.H{
+			"data": res,
+		})
+
 
 	}
 }
