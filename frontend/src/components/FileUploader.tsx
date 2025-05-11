@@ -1,18 +1,53 @@
 import React, { useState, useRef } from "react";
 import { useDropzone } from "react-dropzone";
 import { CloudUpload, XCircle } from "lucide-react";
-
+import { Uploader } from "../utils";
 const FileUploader = () => {
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
+    const [pgvalue, setPgvalue] = useState(undefined);
+    const [perf, setPerf] = useState(undefined);
+    const [baseUrl, setBaseUrl] = useState(undefined);
+    const [partsize, setPartsize] = useState(undefined);
+    const [numuploads, setNumuploads] = useState(undefined);
+    const [ta, setTa] = useState(undefined);
   const controllerRef = useRef(null);
 
   const onDrop = (acceptedFiles) => {
     if (acceptedFiles.length === 0) return;
     const selected = acceptedFiles[0];
     setFile(selected);
-    uploadFile(selected);
+    const uploaderOptions = {
+      file: selected,
+     
+      chunkSize: partsize,
+      threadsQuantity: numuploads,
+     
+    };
+
+    let percentage = undefined;
+    setPgvalue(0);
+    setPerf("-");
+    const uploader = new Uploader(uploaderOptions);
+    const tBegin = performance.now();
+    uploader
+      .onProgress(({ percentage: newPercentage }) => {
+        // to avoid the same percentage to be logged twice
+        if (percentage === 100) {
+          setPerf((performance.now() - tBegin) / 1000);
+        }
+        if (newPercentage !== percentage) {
+          percentage = newPercentage;
+          setPgvalue(percentage);
+        }
+      })
+      .onError((error) => {
+        setFile(undefined);
+        console.error(error);
+      });
+
+    uploader.start();      
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -77,8 +112,11 @@ const FileUploader = () => {
             <div className="w-full mt-2 bg-gray-200 rounded-full h-3 overflow-hidden">
               <div
                 className="bg-blue-500 h-full transition-all duration-300"
-                style={{ width: `${progress}%` }}
+                style={{ width: `${pgvalue}%` }}
               ></div>
+              <div>
+                {perf}
+              </div>
             </div>
 
             {uploading ? (
@@ -89,7 +127,7 @@ const FileUploader = () => {
                 <XCircle className="w-4 h-4" />
                 Cancel Upload
               </button>
-            ) : progress === 100 ? (
+            ) : pgvalue === 100 ? (
               <p className="text-green-600 text-sm mt-2">✅ Upload complete!</p>
             ) : null}
           </div>

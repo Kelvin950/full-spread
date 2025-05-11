@@ -3,6 +3,7 @@ package server
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/kelvin950/spread/internals/ports"
+	cors "github.com/rs/cors/wrapper/gin"
 )
 
 type Server struct {
@@ -29,6 +30,15 @@ func (s Server) UploadController(apiV1 *gin.RouterGroup) {
 func (s *Server) Start() {
 
 	router := gin.Default()
+
+	corss:= cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowCredentials: true,
+	   AllowedHeaders: []string{"*"},
+	   AllowedMethods: []string{"HEAD" , "GET" , "POST", "PUT","DELETE"},
+	
+	})
+	router.Use(corss)
 	apiV1 := router.Group("/api/v1")
 	s.UploadController(apiV1)
 	s.Router = router
