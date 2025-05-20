@@ -24,9 +24,8 @@ type S3 struct {
 
 func NewS3(cfg aws.Config, expiresin time.Duration) *S3 {
 
-	
-	s3Client := s3.NewFromConfig(cfg , func(o *s3.Options) {
-		o.UseAccelerate= true
+	s3Client := s3.NewFromConfig(cfg, func(o *s3.Options) {
+		o.UseAccelerate = true
 	})
 	presignClient := s3.NewPresignClient(s3Client, func(po *s3.PresignOptions) {
 		po.Expires = expiresin
@@ -49,6 +48,12 @@ func (s S3) CreateMultiPartUpload(ctx context.Context, input domain.CreateMultiP
 
 func (s S3) CreatePresignMultiPart(ctx context.Context, input domain.UplaodMultiPart) (*v4.PresignedHTTPRequest, error) {
 
+	select {
+
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	default:
+	}
 	req, err := s.PresignCient.PresignUploadPart(ctx, &s3.UploadPartInput{
 		Bucket:     input.Bucket,
 		UploadId:   input.UploadId,

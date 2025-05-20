@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-	
 
 	"time"
 
@@ -34,9 +33,9 @@ func NewApiMock() *Api {
 	}
 }
 
-func NewApItest(s s3.IS3) *Api{
+func NewApItest(s s3.IS3) *Api {
 
-	return  &Api{
+	return &Api{
 		S3Client: s,
 	}
 }
@@ -57,36 +56,32 @@ func (a Api) CreateMultiPartUpload(data domain.CreateMultiPartUpload) (string, e
 
 func (a Api) CreatePresignMultiPart(data []domain.UplaodMultiPart) ([]domain.UplaodMultiPartApiRes, error) {
 
+	resData := make([]domain.UplaodMultiPartApiRes, len(data)+1)
 
-	resData := make([]domain.UplaodMultiPartApiRes,  len(data)+1)
-	
-
-	errGrp  , ctx := errgroup.WithContext(context.Background())
+	errGrp, ctx := errgroup.WithContext(context.Background())
 	errGrp.SetLimit(2)
 
+	for _, d := range data {
 
-	for _, d:= range  data{
+		func(d domain.UplaodMultiPart) {
 
-		func(d domain.UplaodMultiPart){
- 
 			errGrp.Go(func() error {
 
-				resp ,err := a.S3Client.CreatePresignMultiPart(ctx , d) 
-					if err==nil{
-						resData[*d.PartNumber] = domain.UplaodMultiPartApiRes{
-							Url: resp.URL,
-							PartNumber: *d.PartNumber,
-						}
+				resp, err := a.S3Client.CreatePresignMultiPart(ctx, d)
+				if err == nil {
+					resData[*d.PartNumber] = domain.UplaodMultiPartApiRes{
+						Url:        resp.URL,
+						PartNumber: *d.PartNumber,
 					}
+				}
 
-					
-				return err 
+				return err
 
 			})
 		}(d)
 	}
 
-	return resData , errGrp.Wait()
+	return resData, errGrp.Wait()
 }
 
 func (a Api) CompleteMultiPart(data domain.CompleteMultiPart) (string, error) {
