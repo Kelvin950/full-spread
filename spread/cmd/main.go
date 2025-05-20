@@ -13,7 +13,7 @@ import (
 	"time"
 	awscfg "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/kelvin950/spread/config"
-	server "github.com/kelvin950/spread/internals/adapters"
+	server "github.com/kelvin950/spread/internals/adapters/httpServer"
 	"github.com/kelvin950/spread/internals/core/api"
 )
 
