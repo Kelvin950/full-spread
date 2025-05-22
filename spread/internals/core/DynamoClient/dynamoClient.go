@@ -24,7 +24,7 @@ func NewDynamoClient(cfg aws.Config, tablename string) *DynamoClient {
 	}
 }
 
-func (d DynamoClient) PutItem(item domain.Ec2Task) error {
+func (d DynamoClient) PutItem(item domain.Ec2TaskState) error {
 
 	av, err := attributevalue.MarshalMap(item)
 
