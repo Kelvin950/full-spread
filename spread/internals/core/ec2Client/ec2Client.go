@@ -6,6 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
+	"encoding/base64"
 )
 
 type Ec2Client struct {
@@ -58,6 +59,7 @@ func (e Ec2Client) CreateInstance() (*ec2.RunInstancesOutput, error) {
 		IamInstanceProfile: &types.IamInstanceProfileSpecification{
 			Name: aws.String(e.Role),
 		},
+		UserData: aws.String(base64.URLEncoding.EncodeToString([]byte("docker -e key=video.mp4 -e bucket=testbucketkab   -e path=/usr/local/bin/ffmpeg -e AWS_REGION=us-east-1    letsgo21/transcode:cpu"))) ,
 	})
 }
 

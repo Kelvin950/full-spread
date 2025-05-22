@@ -13,22 +13,22 @@ type DynamoClient struct {
 }
 
 // GetItem provides a mock function with given fields: ec2Id, TaskId
-func (_m *DynamoClient) GetItem(ec2Id string, TaskId string) (domain.Ec2Task, error) {
+func (_m *DynamoClient) GetItem(ec2Id string, TaskId string) (domain.Ec2TaskState, error) {
 	ret := _m.Called(ec2Id, TaskId)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetItem")
 	}
 
-	var r0 domain.Ec2Task
+	var r0 domain.Ec2TaskState
 	var r1 error
-	if rf, ok := ret.Get(0).(func(string, string) (domain.Ec2Task, error)); ok {
+	if rf, ok := ret.Get(0).(func(string, string) (domain.Ec2TaskState, error)); ok {
 		return rf(ec2Id, TaskId)
 	}
-	if rf, ok := ret.Get(0).(func(string, string) domain.Ec2Task); ok {
+	if rf, ok := ret.Get(0).(func(string, string) domain.Ec2TaskState); ok {
 		r0 = rf(ec2Id, TaskId)
 	} else {
-		r0 = ret.Get(0).(domain.Ec2Task)
+		r0 = ret.Get(0).(domain.Ec2TaskState)
 	}
 
 	if rf, ok := ret.Get(1).(func(string, string) error); ok {
@@ -41,7 +41,7 @@ func (_m *DynamoClient) GetItem(ec2Id string, TaskId string) (domain.Ec2Task, er
 }
 
 // PutItem provides a mock function with given fields: item
-func (_m *DynamoClient) PutItem(item domain.Ec2Task) error {
+func (_m *DynamoClient) PutItem(item domain.Ec2TaskState) error {
 	ret := _m.Called(item)
 
 	if len(ret) == 0 {
@@ -49,7 +49,7 @@ func (_m *DynamoClient) PutItem(item domain.Ec2Task) error {
 	}
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(domain.Ec2Task) error); ok {
+	if rf, ok := ret.Get(0).(func(domain.Ec2TaskState) error); ok {
 		r0 = rf(item)
 	} else {
 		r0 = ret.Error(0)
