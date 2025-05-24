@@ -8,21 +8,28 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/kelvin950/spread/internals/core/domain"
 	"github.com/kelvin950/spread/internals/core/s3"
+	"github.com/kelvin950/spread/internals/ports"
 	"golang.org/x/sync/errgroup"
 )
 
 type IApi interface {
 }
 
+var (
+	transcode = "Transcode_job"
+)
+
 type Api struct {
-	S3Client s3.IS3
+	S3Client  s3.IS3
+	TaskQueue ports.TaskQueue
 }
 
-func NewApi(config aws.Config) *Api {
+func NewApi(config aws.Config, taskQueue ports.TaskQueue) *Api {
 
 	s3Client := s3.NewS3(config, 2*time.Hour)
 	return &Api{
-		S3Client: s3Client,
+		S3Client:  s3Client,
+		TaskQueue: taskQueue,
 	}
 }
 
@@ -92,6 +99,10 @@ func (a Api) CompleteMultiPart(data domain.CompleteMultiPart) (string, error) {
 		return "", err
 	}
 
+	a.TaskQueue.DistributeTask(transcode, "critical", domain.Ec2Task{
+		Bucket: *data.Bucket,
+		Key:    *data.Key,
+	})
 	return *output.Location, nil
 
 }

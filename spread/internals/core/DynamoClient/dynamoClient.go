@@ -38,9 +38,9 @@ func (d DynamoClient) PutItem(item domain.Ec2TaskState) error {
 	return err
 }
 
-func (d DynamoClient) GetItem(ec2Id, TaskId string) (domain.Ec2TaskState, error) {
+func (d DynamoClient) GetItem(started_at, TaskId string) (domain.Ec2TaskState, error) {
 
-	task := domain.Ec2TaskState{TaskID: TaskId, Ec2Id: ec2Id}
+	task := domain.Ec2TaskState{TaskID: TaskId, StartedAt: started_at}
 
 	taskmap, err := task.GetKey()
 

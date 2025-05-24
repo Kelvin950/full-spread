@@ -2,11 +2,13 @@ package ec2client
 
 import (
 	"context"
+	"fmt"
+
+	"encoding/base64"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
 	"github.com/aws/aws-sdk-go-v2/service/ec2/types"
-	"encoding/base64"
 )
 
 type Ec2Client struct {
@@ -31,14 +33,36 @@ func NewEc2Client(cfg aws.Config, SubnetId, SecurityGroupId, amiid, maxprice, ro
 	}
 }
 
-func (e Ec2Client) CreateInstance() (*ec2.RunInstancesOutput, error) {
+func (e Ec2Client) CreateInstance(timestarted, taskid string) (*ec2.RunInstancesOutput, error) {
 
+	script := fmt.Sprintf(`#!/bin/bash
+docker run -d -p 80:80 nginx
+
+# Run your custom transcode container
+{
+  docker run -d -p 80:80 nginx
+
+  docker run \
+    -e key=video.mp4 \
+    -e bucket=testbucketkab \
+    -e path=/usr/bin/ffmpeg \
+    -e AWS_REGION=us-east-1 \
+    -e taskid=%s \
+    -e timestarted=%s \
+    letsgo21/transcode:cpu
+
+} > /var/log/user-data.log 2>&1
+`, taskid, timestarted)
 	return e.Client.RunInstances(context.Background(), &ec2.RunInstancesInput{
-		ImageId:          aws.String(e.AmiId),
-		SubnetId:         aws.String(e.SubnetId),
+		ImageId: aws.String(e.AmiId),
+
 		SecurityGroupIds: []string{e.SecurityGroupId},
 		InstanceType:     types.InstanceTypeC6a16xlarge,
+		MaxCount:         aws.Int32(1),
+		MinCount:         aws.Int32(1),
+		KeyName:          aws.String("test-key"),
 		InstanceMarketOptions: &types.InstanceMarketOptionsRequest{
+			MarketType: types.MarketTypeSpot,
 			SpotOptions: &types.SpotMarketOptions{
 				MaxPrice:                     aws.String(e.MaxPrice),
 				InstanceInterruptionBehavior: types.InstanceInterruptionBehaviorTerminate,
@@ -47,7 +71,7 @@ func (e Ec2Client) CreateInstance() (*ec2.RunInstancesOutput, error) {
 		},
 		BlockDeviceMappings: []types.BlockDeviceMapping{
 			{
-				DeviceName: aws.String("dev/sda1"),
+				DeviceName: aws.String("/dev/sda1"),
 				Ebs: &types.EbsBlockDevice{
 					DeleteOnTermination: aws.Bool(true),
 					VolumeType:          types.VolumeTypeGp3,
@@ -59,7 +83,7 @@ func (e Ec2Client) CreateInstance() (*ec2.RunInstancesOutput, error) {
 		IamInstanceProfile: &types.IamInstanceProfileSpecification{
 			Name: aws.String(e.Role),
 		},
-		UserData: aws.String(base64.URLEncoding.EncodeToString([]byte("docker -e key=video.mp4 -e bucket=testbucketkab   -e path=/usr/local/bin/ffmpeg -e AWS_REGION=us-east-1    letsgo21/transcode:cpu"))) ,
+		UserData: aws.String(base64.StdEncoding.EncodeToString([]byte(script))),
 	})
 }
 

@@ -12,9 +12,9 @@ type Ec2Client struct {
 	mock.Mock
 }
 
-// CreateInstance provides a mock function with no fields
-func (_m *Ec2Client) CreateInstance() (*ec2.RunInstancesOutput, error) {
-	ret := _m.Called()
+// CreateInstance provides a mock function with given fields: timestarted, taskid
+func (_m *Ec2Client) CreateInstance(timestarted string, taskid string) (*ec2.RunInstancesOutput, error) {
+	ret := _m.Called(timestarted, taskid)
 
 	if len(ret) == 0 {
 		panic("no return value specified for CreateInstance")
@@ -22,19 +22,19 @@ func (_m *Ec2Client) CreateInstance() (*ec2.RunInstancesOutput, error) {
 
 	var r0 *ec2.RunInstancesOutput
 	var r1 error
-	if rf, ok := ret.Get(0).(func() (*ec2.RunInstancesOutput, error)); ok {
-		return rf()
+	if rf, ok := ret.Get(0).(func(string, string) (*ec2.RunInstancesOutput, error)); ok {
+		return rf(timestarted, taskid)
 	}
-	if rf, ok := ret.Get(0).(func() *ec2.RunInstancesOutput); ok {
-		r0 = rf()
+	if rf, ok := ret.Get(0).(func(string, string) *ec2.RunInstancesOutput); ok {
+		r0 = rf(timestarted, taskid)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*ec2.RunInstancesOutput)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
+	if rf, ok := ret.Get(1).(func(string, string) error); ok {
+		r1 = rf(timestarted, taskid)
 	} else {
 		r1 = ret.Error(1)
 	}
