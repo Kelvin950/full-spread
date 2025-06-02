@@ -45,7 +45,7 @@ func (t *Task) DistributeTask(taskName, priority string, taskpayload interface{}
 
 	task := asynq.NewTask(taskName, payload)
 
-	info, err := t.Client.Enqueue(task, asynq.MaxRetry(3), asynq.Retention(24*time.Hour), asynq.ProcessIn(10*time.Second), asynq.Queue(priority))
+	info, err := t.Client.Enqueue(task, asynq.MaxRetry(3), asynq.Retention(24*time.Hour), asynq.ProcessIn(10*time.Second), asynq.Queue(priority) )
 
 	if err != nil {
 		return err
