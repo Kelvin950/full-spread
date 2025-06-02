@@ -74,7 +74,8 @@ docker run -d -p 80:80 nginx
 				DeviceName: aws.String("/dev/sda1"),
 				Ebs: &types.EbsBlockDevice{
 					DeleteOnTermination: aws.Bool(true),
-					VolumeType:          types.VolumeTypeGp3,
+					VolumeType:          types.VolumeTypeIo2,
+					Iops:                aws.Int32(25000),  
 					VolumeSize:          aws.Int32(100),
 					Encrypted:           aws.Bool(true),
 				},

@@ -58,7 +58,7 @@ func main() {
 	apis := api.NewApi(cfg, taskQueue)
 
 	asynqSrv := asynq.NewServer(rClient, asynq.Config{ // Specify how many concurrent workers to use
-		Concurrency: 5,
+		Concurrency: 2,
 		// Optionally specify multiple queues with different priority.
 		Queues: map[string]int{
 
@@ -66,6 +66,20 @@ func main() {
 			"default":  3,
 			"low":      1,
 		},
+
+		RetryDelayFunc:  func(n int, e error, t *asynq.Task) time.Duration{
+
+			switch(n){
+			case 1:
+				return 5 * time.Minute 
+			case 2 :
+				return 10 * time.Minute 
+			default: 
+				return 15 * time.Minute
+			}
+
+
+		} ,
 		ErrorHandler: asynq.ErrorHandlerFunc(func(ctx context.Context, task *asynq.Task, err error) {
 
 			logger.Error().Err(err).Str("type", task.Type()).

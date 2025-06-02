@@ -6,7 +6,9 @@ import (
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	token "github.com/kelvin950/spread/internals/core/Token"
 	"github.com/kelvin950/spread/internals/core/domain"
+	firebaseclient "github.com/kelvin950/spread/internals/core/firebase"
 	"github.com/kelvin950/spread/internals/core/s3"
 	"github.com/kelvin950/spread/internals/ports"
 	"golang.org/x/sync/errgroup"
@@ -22,6 +24,9 @@ var (
 type Api struct {
 	S3Client  s3.IS3
 	TaskQueue ports.TaskQueue
+	FirebaseCl firebaseclient.IFirebaseClient
+	Db  ports.Db
+	Token token.IToken
 }
 
 func NewApi(config aws.Config, taskQueue ports.TaskQueue) *Api {
