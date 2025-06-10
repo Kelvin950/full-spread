@@ -17,6 +17,7 @@ import (
 	"github.com/kelvin950/spread/config"
 	redisclient "github.com/kelvin950/spread/internals/adapters/RedisClient"
 	"github.com/kelvin950/spread/internals/adapters/TaskQueue"
+	"github.com/kelvin950/spread/internals/adapters/db"
 	server "github.com/kelvin950/spread/internals/adapters/httpServer"
 	dynamoclient "github.com/kelvin950/spread/internals/core/DynamoClient"
 	"github.com/kelvin950/spread/internals/core/api"
@@ -42,6 +43,13 @@ func main() {
 	maxPrice := conf.GetKey("MAX_PRICE")
 	awsRole := conf.GetKey("AWS_ROLE")
 	tableName := conf.GetKey("TABLE_NAME")
+	dbport := conf.GetKey("DB_PORT")
+	host := conf.GetKey("DB_HOST")
+	user := conf.GetKey("DB_USER")
+	password := conf.GetKey("DB_PASSWORD")
+	dbname := conf.GetKey("DB_NAME")
+	jwtSecret := conf.GetKey("JWT_SECRET")
+	fapikey := conf.GetKey("FIREBASE_API_KEY")
 	cfg, err := awscfg.LoadDefaultConfig(context.Background())
 
 	if err != nil {
@@ -55,8 +63,16 @@ func main() {
 
 	taskQueue := TaskQueue.NewTask(rClient, ec2Cl, dynamoCl)
 
-	apis := api.NewApi(cfg, taskQueue)
+	d, err := db.Connect(host, user, password, dbname, dbport)
 
+	if err != nil {
+		log.Fatal(err)
+	}
+	apis, err := api.NewApi(cfg, taskQueue, d, jwtSecret, fapikey)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 	asynqSrv := asynq.NewServer(rClient, asynq.Config{ // Specify how many concurrent workers to use
 		Concurrency: 2,
 		// Optionally specify multiple queues with different priority.
@@ -67,19 +83,18 @@ func main() {
 			"low":      1,
 		},
 
-		RetryDelayFunc:  func(n int, e error, t *asynq.Task) time.Duration{
+		RetryDelayFunc: func(n int, e error, t *asynq.Task) time.Duration {
 
-			switch(n){
+			switch n {
 			case 1:
-				return 5 * time.Minute 
-			case 2 :
-				return 10 * time.Minute 
-			default: 
+				return 5 * time.Minute
+			case 2:
+				return 10 * time.Minute
+			default:
 				return 15 * time.Minute
 			}
 
-
-		} ,
+		},
 		ErrorHandler: asynq.ErrorHandlerFunc(func(ctx context.Context, task *asynq.Task, err error) {
 
 			logger.Error().Err(err).Str("type", task.Type()).

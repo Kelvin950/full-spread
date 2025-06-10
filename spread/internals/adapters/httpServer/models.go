@@ -12,17 +12,55 @@ type UplaodMultiPartReq struct {
 	PartNumber []int  `json:"part_number" binding:"required"`
 }
 
-
 type CompleteMultiPartReq struct {
-	Bucket  string `json:"bucket"`
-	UploadId string `json:"upload_id"`
-	Key      string `json:"key"`
-   Parts []Parts `json:"parts"`
+	Bucket   string  `json:"bucket"`
+	UploadId string  `json:"upload_id"`
+	Key      string  `json:"key"`
+	Parts    []Parts `json:"parts"`
 }
-
-
 
 type Parts struct {
 	Etag       *string `json:"etag"`
 	PartNumber *int32  `json:"part_number"`
+}
+
+type CreateUserReq struct {
+	Email       string `json:"email"`
+	Username    string `json:"username"`
+	DateOfBirth string `json:"dob"`
+	Avatar      string `json:"avatar"`
+	Password    string `json:"password"`
+}
+
+type LoginUserReq struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type LoginGoogleUserReq struct {
+	Credential string `json:"credential"`
+}
+
+type CreateCreatorReq struct {
+	Name        string `json:"name"`
+	HeaderUrl   string `json:"header_url"`
+	Avatar      string `json:"avatar"`
+	PhoneNumber string `json:"phone_number"`
+}
+
+type UpdateCreatorReq struct {
+	Id          uint   `json:"creator_id"`
+	Name        string `json:"name"`
+	HeaderUrl   string `json:"header_url"`
+	Avatar      string `json:"avatar"`
+	PhoneNumber string `json:"phone_number"`
+}
+
+type CreateMemberReq struct {
+	UserID    uint `json:"user_id"`
+	CreatorId uint `json:"creator_id"`
+}
+
+type CreateSubReq struct {
+	MembershipID uint `json:"membership_id"`
 }

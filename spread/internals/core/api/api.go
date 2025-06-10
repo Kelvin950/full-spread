@@ -11,6 +11,7 @@ import (
 	firebaseclient "github.com/kelvin950/spread/internals/core/firebase"
 	"github.com/kelvin950/spread/internals/core/s3"
 	"github.com/kelvin950/spread/internals/ports"
+
 	"golang.org/x/sync/errgroup"
 )
 
@@ -22,20 +23,28 @@ var (
 )
 
 type Api struct {
-	S3Client  s3.IS3
-	TaskQueue ports.TaskQueue
+	S3Client   s3.IS3
+	TaskQueue  ports.TaskQueue
 	FirebaseCl firebaseclient.IFirebaseClient
-	Db  ports.Db
-	Token token.IToken
+	Db         ports.Db
+	Token      token.IToken
 }
 
-func NewApi(config aws.Config, taskQueue ports.TaskQueue) *Api {
+func NewApi(config aws.Config, taskQueue ports.TaskQueue, db ports.Db, jwtSecret, fapikey string) (*Api, error) {
 
 	s3Client := s3.NewS3(config, 2*time.Hour)
-	return &Api{
-		S3Client:  s3Client,
-		TaskQueue: taskQueue,
+	fb, err := firebaseclient.NewFirebaseClient(fapikey)
+	tokn := token.NewToken(jwtSecret)
+	if err != nil {
+		return nil, err
 	}
+	return &Api{
+		S3Client:   s3Client,
+		Db:         db,
+		TaskQueue:  taskQueue,
+		FirebaseCl: fb,
+		Token:      tokn,
+	}, nil
 }
 
 func NewApiMock() *Api {
@@ -45,10 +54,13 @@ func NewApiMock() *Api {
 	}
 }
 
-func NewApItest(s s3.IS3) *Api {
+func NewApItest(s s3.IS3, db ports.Db, firebasecl firebaseclient.IFirebaseClient, token token.IToken) *Api {
 
 	return &Api{
-		S3Client: s,
+		S3Client:   s,
+		Db:         db,
+		FirebaseCl: firebasecl,
+		Token:      token,
 	}
 }
 

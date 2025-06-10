@@ -40,6 +40,42 @@ func (_m *Api) CompleteMultiPart(data domain.CompleteMultiPart) (string, error) 
 	return r0, r1
 }
 
+// CreateCreator provides a mock function with given fields: creator
+func (_m *Api) CreateCreator(creator *domain.Creator) error {
+	ret := _m.Called(creator)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CreateCreator")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*domain.Creator) error); ok {
+		r0 = rf(creator)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// CreateMember provides a mock function with given fields: membership
+func (_m *Api) CreateMember(membership *domain.Members) error {
+	ret := _m.Called(membership)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CreateMember")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*domain.Members) error); ok {
+		r0 = rf(membership)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // CreateMultiPartUpload provides a mock function with given fields: data
 func (_m *Api) CreateMultiPartUpload(data domain.CreateMultiPartUpload) (string, error) {
 	ret := _m.Called(data)
@@ -91,6 +127,368 @@ func (_m *Api) CreatePresignMultiPart(data []domain.UplaodMultiPart) ([]domain.U
 
 	if rf, ok := ret.Get(1).(func([]domain.UplaodMultiPart) error); ok {
 		r1 = rf(data)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// CreateSubscription provides a mock function with given fields: sub
+func (_m *Api) CreateSubscription(sub *domain.Subscription) error {
+	ret := _m.Called(sub)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CreateSubscription")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*domain.Subscription) error); ok {
+		r0 = rf(sub)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// CreateUser provides a mock function with given fields: user, password
+func (_m *Api) CreateUser(user *domain.User, password string) error {
+	ret := _m.Called(user, password)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CreateUser")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*domain.User, string) error); ok {
+		r0 = rf(user, password)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// DeleteUser provides a mock function with given fields: id
+func (_m *Api) DeleteUser(id int) error {
+	ret := _m.Called(id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteUser")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(int) error); ok {
+		r0 = rf(id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// GetCreator provides a mock function with given fields: creator
+func (_m *Api) GetCreator(creator domain.Creator) (domain.Creator, error) {
+	ret := _m.Called(creator)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetCreator")
+	}
+
+	var r0 domain.Creator
+	var r1 error
+	if rf, ok := ret.Get(0).(func(domain.Creator) (domain.Creator, error)); ok {
+		return rf(creator)
+	}
+	if rf, ok := ret.Get(0).(func(domain.Creator) domain.Creator); ok {
+		r0 = rf(creator)
+	} else {
+		r0 = ret.Get(0).(domain.Creator)
+	}
+
+	if rf, ok := ret.Get(1).(func(domain.Creator) error); ok {
+		r1 = rf(creator)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetCreators provides a mock function with given fields: page, pageSize
+func (_m *Api) GetCreators(page int, pageSize int) ([]domain.Creator, error) {
+	ret := _m.Called(page, pageSize)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetCreators")
+	}
+
+	var r0 []domain.Creator
+	var r1 error
+	if rf, ok := ret.Get(0).(func(int, int) ([]domain.Creator, error)); ok {
+		return rf(page, pageSize)
+	}
+	if rf, ok := ret.Get(0).(func(int, int) []domain.Creator); ok {
+		r0 = rf(page, pageSize)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]domain.Creator)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(int, int) error); ok {
+		r1 = rf(page, pageSize)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetUser provides a mock function with given fields: id
+func (_m *Api) GetUser(id uint) (domain.User, error) {
+	ret := _m.Called(id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetUser")
+	}
+
+	var r0 domain.User
+	var r1 error
+	if rf, ok := ret.Get(0).(func(uint) (domain.User, error)); ok {
+		return rf(id)
+	}
+	if rf, ok := ret.Get(0).(func(uint) domain.User); ok {
+		r0 = rf(id)
+	} else {
+		r0 = ret.Get(0).(domain.User)
+	}
+
+	if rf, ok := ret.Get(1).(func(uint) error); ok {
+		r1 = rf(id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetUserMemberships provides a mock function with given fields: userid
+func (_m *Api) GetUserMemberships(userid uint) ([]domain.Members, error) {
+	ret := _m.Called(userid)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetUserMemberships")
+	}
+
+	var r0 []domain.Members
+	var r1 error
+	if rf, ok := ret.Get(0).(func(uint) ([]domain.Members, error)); ok {
+		return rf(userid)
+	}
+	if rf, ok := ret.Get(0).(func(uint) []domain.Members); ok {
+		r0 = rf(userid)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]domain.Members)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(uint) error); ok {
+		r1 = rf(userid)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetUserMembershipsandSubscriptions provides a mock function with given fields: userid
+func (_m *Api) GetUserMembershipsandSubscriptions(userid int) ([]domain.MembershipSubscription, error) {
+	ret := _m.Called(userid)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetUserMembershipsandSubscriptions")
+	}
+
+	var r0 []domain.MembershipSubscription
+	var r1 error
+	if rf, ok := ret.Get(0).(func(int) ([]domain.MembershipSubscription, error)); ok {
+		return rf(userid)
+	}
+	if rf, ok := ret.Get(0).(func(int) []domain.MembershipSubscription); ok {
+		r0 = rf(userid)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]domain.MembershipSubscription)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(int) error); ok {
+		r1 = rf(userid)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// GetUserSubscription provides a mock function with given fields: membershipid
+func (_m *Api) GetUserSubscription(membershipid int) (domain.Subscription, error) {
+	ret := _m.Called(membershipid)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetUserSubscription")
+	}
+
+	var r0 domain.Subscription
+	var r1 error
+	if rf, ok := ret.Get(0).(func(int) (domain.Subscription, error)); ok {
+		return rf(membershipid)
+	}
+	if rf, ok := ret.Get(0).(func(int) domain.Subscription); ok {
+		r0 = rf(membershipid)
+	} else {
+		r0 = ret.Get(0).(domain.Subscription)
+	}
+
+	if rf, ok := ret.Get(1).(func(int) error); ok {
+		r1 = rf(membershipid)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Login provides a mock function with given fields: email, password
+func (_m *Api) Login(email string, password string) (domain.User, string, error) {
+	ret := _m.Called(email, password)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Login")
+	}
+
+	var r0 domain.User
+	var r1 string
+	var r2 error
+	if rf, ok := ret.Get(0).(func(string, string) (domain.User, string, error)); ok {
+		return rf(email, password)
+	}
+	if rf, ok := ret.Get(0).(func(string, string) domain.User); ok {
+		r0 = rf(email, password)
+	} else {
+		r0 = ret.Get(0).(domain.User)
+	}
+
+	if rf, ok := ret.Get(1).(func(string, string) string); ok {
+		r1 = rf(email, password)
+	} else {
+		r1 = ret.Get(1).(string)
+	}
+
+	if rf, ok := ret.Get(2).(func(string, string) error); ok {
+		r2 = rf(email, password)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
+}
+
+// LoginGoogleUser provides a mock function with given fields: cred
+func (_m *Api) LoginGoogleUser(cred string) (domain.User, string, error) {
+	ret := _m.Called(cred)
+
+	if len(ret) == 0 {
+		panic("no return value specified for LoginGoogleUser")
+	}
+
+	var r0 domain.User
+	var r1 string
+	var r2 error
+	if rf, ok := ret.Get(0).(func(string) (domain.User, string, error)); ok {
+		return rf(cred)
+	}
+	if rf, ok := ret.Get(0).(func(string) domain.User); ok {
+		r0 = rf(cred)
+	} else {
+		r0 = ret.Get(0).(domain.User)
+	}
+
+	if rf, ok := ret.Get(1).(func(string) string); ok {
+		r1 = rf(cred)
+	} else {
+		r1 = ret.Get(1).(string)
+	}
+
+	if rf, ok := ret.Get(2).(func(string) error); ok {
+		r2 = rf(cred)
+	} else {
+		r2 = ret.Error(2)
+	}
+
+	return r0, r1, r2
+}
+
+// UpdateCreator provides a mock function with given fields: creator
+func (_m *Api) UpdateCreator(creator *domain.Creator) error {
+	ret := _m.Called(creator)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateCreator")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*domain.Creator) error); ok {
+		r0 = rf(creator)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// UpdateUser provides a mock function with given fields: user
+func (_m *Api) UpdateUser(user *domain.User) error {
+	ret := _m.Called(user)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateUser")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(*domain.User) error); ok {
+		r0 = rf(user)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// VerifyJwt provides a mock function with given fields: token
+func (_m *Api) VerifyJwt(token string) (domain.Payload, error) {
+	ret := _m.Called(token)
+
+	if len(ret) == 0 {
+		panic("no return value specified for VerifyJwt")
+	}
+
+	var r0 domain.Payload
+	var r1 error
+	if rf, ok := ret.Get(0).(func(string) (domain.Payload, error)); ok {
+		return rf(token)
+	}
+	if rf, ok := ret.Get(0).(func(string) domain.Payload); ok {
+		r0 = rf(token)
+	} else {
+		r0 = ret.Get(0).(domain.Payload)
+	}
+
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(token)
 	} else {
 		r1 = ret.Error(1)
 	}
