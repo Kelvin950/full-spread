@@ -59,7 +59,10 @@ func (d Db) GetCreators(page, pagesize int) ([]domain.Creator, error) {
 		creators = append(creators, domain.Creator{
 			ID:        creator.ID,
 			Name:      creator.Name,
-			HeaderUrl: creator.HeaderUrl})
+			HeaderUrl: creator.HeaderUrl,
+			CreatedAt: creator.CreatedAt,
+			UpdatedAt: creator.UpdatedAt,
+		})
 
 	}
 	return creators, nil

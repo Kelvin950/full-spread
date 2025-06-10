@@ -38,10 +38,10 @@ func (s Server) UserController(apiV1 *gin.RouterGroup) {
 
 func (s Server) CreatorController(apiV1 *gin.RouterGroup) {
 
-	apiV1.POST("/creator", s.CreateCreator())
-	apiV1.GET("/creator", s.GetCreators())
-	apiV1.GET("/creator/user", s.GetCreator())
-	apiV1.PUT("/creator", s.UpdateCreator())
+	apiV1.POST("/creator", s.VerifyJwt(), s.CreateCreator())
+	apiV1.GET("/creator", s.VerifyJwt(), s.GetCreators())
+	apiV1.GET("/creator/user", s.VerifyJwt(), s.GetCreator())
+	apiV1.PUT("/creator", s.VerifyJwt(), s.UpdateCreator())
 
 }
 
@@ -49,17 +49,17 @@ func (s Server) MemberController(apiV1 *gin.RouterGroup) {
 
 	memberGroup := apiV1.Group("/member")
 
-	memberGroup.POST("/", s.CreateMember())
-	memberGroup.GET("/", s.GetUserMemberships())
-	memberGroup.GET("/subs", s.GetUserMembershipsandSubscriptions())
+	memberGroup.POST("/", s.VerifyJwt(), s.CreateMember())
+	memberGroup.GET("/", s.VerifyJwt(), s.GetUserMemberships())
+	memberGroup.GET("/subs", s.VerifyJwt(), s.GetUserMembershipsandSubscriptions())
 }
 
 func (s Server) SubsController(apiV1 *gin.RouterGroup) {
 
 	subsGroup := apiV1.Group("/subs")
 
-	subsGroup.POST("/", s.CreateSubscription())
-	subsGroup.GET("/", s.GetUserSubs())
+	subsGroup.POST("/", s.VerifyJwt(), s.CreateSubscription())
+	subsGroup.GET("/", s.VerifyJwt(), s.GetUserSubs())
 }
 func (s *Server) Start() {
 

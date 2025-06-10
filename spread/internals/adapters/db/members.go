@@ -74,13 +74,15 @@ func (d Db) GetUserMemberships(memberid uint, page, pageSize int) ([]domain.Memb
 					HeaderUrl: membership.Creator.HeaderUrl,
 					AvatarUrl: membership.Creator.AvatarUrl,
 				},
+				CreatedAt: membership.CreatedAt,
+				UpdatedAt: membership.UpdatedAt,
 			})
 
 		}
 		return userMembers, nil
 	}
 
-	return nil, nil
+	return []domain.Members{}, nil
 
 }
 
@@ -134,5 +136,5 @@ func (d Db) GetUserMembershipsandSubscriptions(userid int) ([]domain.MembershipS
 		return membershipSub, nil
 	}
 
-	return nil, nil
+	return []domain.MembershipSubscription{}, nil
 }

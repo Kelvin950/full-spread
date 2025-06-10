@@ -14,7 +14,7 @@ func (s Server) VerifyJwt() gin.HandlerFunc {
 		authHeader := ctx.GetHeader("authorization")
 
 		if len(authHeader) < 1 {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"error": "unauthorized",
 			})
 			return
@@ -24,7 +24,7 @@ func (s Server) VerifyJwt() gin.HandlerFunc {
 		token := strings.Split(authHeader, " ")[1]
 
 		if len(token) < 1 {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"error": "unauthorized",
 			})
 			return
@@ -33,7 +33,7 @@ func (s Server) VerifyJwt() gin.HandlerFunc {
 		payload, err := s.Api.VerifyJwt(token)
 
 		if err != nil {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"error": "unauthorized",
 			})
 

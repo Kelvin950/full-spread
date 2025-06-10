@@ -23,7 +23,7 @@ func (d Db) CreateUser(user *domain.User) error {
 
 	newUser := User{
 		Email:       user.Email,
-		Username:    user.Email,
+		Username:    user.Username,
 		DateOfBirth: user.DateOfBirth,
 		Firebaseuid: user.Firebaseuid,
 		Avatar:      user.Avatar,

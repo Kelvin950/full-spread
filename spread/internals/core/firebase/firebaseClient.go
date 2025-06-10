@@ -11,6 +11,7 @@ import (
 
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/auth"
+	"github.com/kelvin950/spread/internals/core/domain"
 	"google.golang.org/api/option"
 )
 
@@ -50,7 +51,13 @@ func (f FirebaseClient) CreateUser(email, password string) (string, error) {
 	usertocreate := (&auth.UserToCreate{}).Email(email).Password(password).EmailVerified(false)
 
 	newUser, err := authclient.CreateUser(context.TODO(), usertocreate)
+	if err != nil {
 
+		return "", domain.ApiError{
+			Code:   http.StatusBadRequest,
+			ErrVal: err,
+		}
+	}
 	return newUser.UID, err
 }
 
