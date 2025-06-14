@@ -36,6 +36,7 @@ func (p Db) CreatePost(post *domain.Post) error {
 	post.UpdatedAt = newpost.UpdatedAt
 	return nil
 }
+//cdc
 
 func (p Db) GetCreatorPosts(creatorid uint, page, pagesize int) ([]domain.Post, error) {
 
