@@ -1,6 +1,8 @@
 package db
 
 import (
+	"errors"
+
 	"github.com/kelvin950/spread/internals/core/domain"
 	"gorm.io/gorm"
 )
@@ -38,34 +40,100 @@ func (p Db) CreatePost(post *domain.Post) error {
 func (p Db) GetCreatorPosts(creatorid uint, page, pagesize int) ([]domain.Post, error) {
 
 	var posts []Post
-	result := p.db.Preload("Content").Find(&posts).Offset((page - 1) * pagesize).Limit(pagesize)
+	result := p.db.Preload("Content").Find(&posts).Where("creator_id = ?" , creatorid).Offset((page - 1) * pagesize).Limit(pagesize)
 
 	if result.Error != nil {
 		return nil, result.Error
 
 	}
+  		var creatorPost = []domain.Post{}
+	
 
-	if len(posts) > 1 {
 
-		var creatorPost = []domain.Post{}
 		for _, post := range posts {
 
+			Content :=   []domain.Content{}
+			for _ , content := range post.Content{
+				Content = append(Content , domain.Content{
+					ID: content.ID,
+					PostID: content.PostID,
+					CreatedAt: content.CreatedAt,
+					UpdatedAt: content.UpdatedAt,
+					MimeType: content.MimeType,
+					LocationUrl: content.LocationUrl,
+					ManifestFileUrl: content.ManifestFileUrl,
+
+				})
+			}
 			creatorPost = append(creatorPost, domain.Post{
 				ID:        post.ID,
 				Published: post.Published,
+				Type: 	post.Type,
+				Description: post.Description,
+				CreatorID: post.CreatorID,
+				CreatedAt: post.CreatedAt,
+				UpdatedAt: post.UpdatedAt,
+				Content: Content,
+			 
 			})
 
-		}
+		
 
 	}
 
-	return []domain.Post{}, nil
+	return creatorPost, nil
 
 }
 
-func (p Db) GetCreatorPost(creatorid uint, post uint) error {
+func (p Db) GetCreatorPost(creatorid uint, postid uint) (domain.Post , error) {
+ var post Post 
+ 
+ result := p.db.Preload("Content").First(&post, "creator_id = ? AND id = ?", creatorid, postid)
+   
+ if result.Error !=nil{
 
-}
+	  if   errors.Is(result.Error, gorm.ErrRecordNotFound) {
+
+		return domain.Post{} , domain.ApiError{
+			Code:   404,
+			ErrVal: errors.New("post not found"),
+		}
+	  }
+	return domain.Post{} , result.Error
+ }
+ 
+
+    content := []domain.Content{} 
+
+
+	for _ , c:=range post.Content{
+
+		content = append(content, domain.Content{
+			ID: c.ID,
+			PostID: c.PostID,
+			CreatedAt: c.CreatedAt,
+			UpdatedAt: c.UpdatedAt,
+			MimeType: c.MimeType,
+			LocationUrl: c.LocationUrl,
+			ManifestFileUrl: c.ManifestFileUrl,
+		})
+	}
+
+ return domain.Post{
+	ID: post.ID,
+	CreatorID: post.CreatorID,
+	Description: post.Description,
+	CreatedAt: post.CreatedAt,
+	UpdatedAt: post.UpdatedAt,
+	Type: post.Type,
+	Published: post.Published,
+	Content: content,
+	}, nil
+ }
+
+
+
+
 
 // func (p Db) GetPost(postid uint, userid uint) error {
 
