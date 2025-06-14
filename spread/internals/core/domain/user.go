@@ -71,3 +71,17 @@ type Subscription struct {
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 }
+
+type PostType string
+
+func (p PostType) OneTime() PostType {
+	return "oneTime"
+}
+
+func (p PostType) Free() PostType {
+	return "Free"
+}
+
+func (p PostType) Subscription() PostType {
+	return "Subs"
+}
