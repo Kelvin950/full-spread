@@ -18,4 +18,10 @@ type Db interface {
 	GetUserMembershipsandSubscriptions(userid int) ([]domain.MembershipSubscription, error)
 	CreateSubscription(sub *domain.Subscription) error
 	GetUserSubscription(membershipId int) (domain.Subscription, error)
+	CreatePost(post *domain.Post) error
+	GetCreatorPosts(creatorid uint, page, pagesize int) ([]domain.Post, error)
+	GetCreatorPost(creatorid uint, postid uint) (domain.Post , error)
+	 UpdatePost(post *domain.Post) error 
+	  CreateContent(content *domain.Content) error
+	  UpdateContent(content *domain.Content) error
 }

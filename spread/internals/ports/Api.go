@@ -22,4 +22,6 @@ type Api interface {
 	VerifyJwt(token string) (domain.Payload, error)
 	CreateSubscription(sub *domain.Subscription) error
 	GetUserSubscription(membershipid int) (domain.Subscription, error)
+	GetCreatorPost(userID, postid int) (domain.Post, error)
+	GetCreatorPosts(userId, page, pageSize int) ([]domain.Post, error)
 }

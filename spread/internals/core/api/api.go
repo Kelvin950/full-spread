@@ -30,10 +30,10 @@ type Api struct {
 	Token      token.IToken
 }
 
-func NewApi(config aws.Config, taskQueue ports.TaskQueue, db ports.Db, jwtSecret, fapikey string) (*Api, error) {
+func NewApi(config aws.Config, taskQueue ports.TaskQueue, db ports.Db, jwtSecret, fapikey , fileloc string) (*Api, error) {
 
 	s3Client := s3.NewS3(config, 2*time.Hour)
-	fb, err := firebaseclient.NewFirebaseClient(fapikey)
+	fb, err := firebaseclient.NewFirebaseClient(fapikey, fileloc)
 	tokn := token.NewToken(jwtSecret)
 	if err != nil {
 		return nil, err

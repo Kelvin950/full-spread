@@ -50,6 +50,7 @@ func main() {
 	dbname := conf.GetKey("DB_NAME")
 	jwtSecret := conf.GetKey("JWT_SECRET")
 	fapikey := conf.GetKey("FIREBASE_API_KEY")
+	filoc:= conf.GetKey("FIREBASE_CONFIG")
 	cfg, err := awscfg.LoadDefaultConfig(context.Background())
 
 	if err != nil {
@@ -68,7 +69,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	apis, err := api.NewApi(cfg, taskQueue, d, jwtSecret, fapikey)
+	apis, err := api.NewApi(cfg, taskQueue, d, jwtSecret, fapikey , filoc)
 
 	if err != nil {
 		log.Fatal(err)

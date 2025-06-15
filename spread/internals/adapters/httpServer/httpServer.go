@@ -61,6 +61,14 @@ func (s Server) SubsController(apiV1 *gin.RouterGroup) {
 	subsGroup.POST("/", s.VerifyJwt(), s.CreateSubscription())
 	subsGroup.GET("/", s.VerifyJwt(), s.GetUserSubs())
 }
+
+func(s Server)PostController(apiV1 *gin.RouterGroup){
+	postGroup := apiV1.Group("/post") 
+
+
+	postGroup.GET("/creator" , s.VerifyJwt(), s.GetCreatorPosts())
+	postGroup.GET("/creator/:postid" , s.VerifyJwt() , s.GetCreatorPost())
+}
 func (s *Server) Start() {
 
 	router := gin.Default()

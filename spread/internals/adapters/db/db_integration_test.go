@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/docker/go-connections/nat"
 	"github.com/kelvin950/spread/internals/core/domain"
 	"github.com/stretchr/testify/suite"
@@ -246,6 +247,79 @@ func (s *TestSuite) TestreateMember() {
 		s.NoError(err)
 		s.NotEmpty(subs)
 		s.T().Logf("%+v", subs)
+	})
+
+
+	s.Run("should create post and content", func ()  {
+		 
+		user ,err:= s.Db.GetUserByEmailOrUsername(domain.User{
+			Email: "denlinato@gmail.com",
+		})
+
+		s.NoError(err) 
+		 
+		 creator , err:=  s.Db.GetCreator(domain.Creator{
+			UserID: user.ID,
+		  })
+
+		  s.NoError(err) 
+
+		  
+         var vv domain.PostType
+		post := &domain.Post{
+			Description: "This is a test post",
+			CreatorID: creator.ID,
+			Type:  vv.OneTime(),
+			Published: false ,     
+		}
+		err = s.Db.CreatePost(post) 
+
+		s.NoError(err) 
+
+		content:= domain.Content{
+			PostID: post.ID,
+	 		MimeType: "image/png",
+			LocationUrl: "https://example.com/image.png",
+		}
+
+		err = s.Db.CreateContent(&content) 
+		s.NoError(err) 
+  
+		 updatepost:= &domain.Post{
+			ID: post.ID,
+			Type: vv.Subscription(),
+			Published: true,
+		 }
+		err = s.Db.UpdatePost(updatepost)
+		s.NoError(err)
+		 
+	  
+
+
+	   updatecontent :=&domain.Content{
+		ID: content.ID,
+		ManifestFileUrl: aws.String("https://example.com/manifest.json"),
+	   }
+
+	   err  = s.Db.UpdateContent(updatecontent )
+
+	   s.NoError(err) 
+
+	   
+ posts , err:= s.Db.GetCreatorPost(creator.ID , post.ID)
+
+	   s.NoError(err) 
+
+	   s.Equal(posts.Description , post.Description) 
+	   s.Equal(posts.CreatorID , post.CreatorID) 
+	   s.True(posts.Published)
+	   s.NotEqual(post.Type.Subscription() ,vv.OneTime()) 
+
+	
+	   s.Equal(posts.Content[0].MimeType, content.MimeType)
+	   s.Equal(posts.Content[0].LocationUrl, content.LocationUrl)
+       s.NotEmpty(posts.Content[0].ManifestFileUrl)
+
 	})
 
 }

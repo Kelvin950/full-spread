@@ -23,15 +23,16 @@ type IFirebaseClient interface {
 type FirebaseClient struct {
 	firebase *firebase.App
 	ApiKey   string
+	
 }
 
 type varRes struct {
 	UID string `json:"localId"`
 }
 
-func NewFirebaseClient(fapikey string) (*FirebaseClient, error) {
+func NewFirebaseClient(fapikey string , fileloc string ) (*FirebaseClient, error) {
 
-	absPath := "../confusionserver-d01b1-firebase-adminsdk-udbmv-4c13b154f0.json"
+	absPath := fileloc
 
 	fb, err := firebase.NewApp(context.TODO(), &firebase.Config{}, option.WithCredentialsFile(absPath))
 	return &FirebaseClient{
