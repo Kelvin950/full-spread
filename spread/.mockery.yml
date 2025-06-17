@@ -1,14 +1,16 @@
-all: false
-dir: '{{.InterfaceDir}}'
-filename: mocks_test.go
-force-file-write: false
+all: true
+dir: './mocks'
+filename: '{{.InterfaceName}}.go'
+force-file-write: true
 formatter: goimports
 log-level: info
-structname: {{.Mock}}{{.InterfaceName}}
-pkgname: '{{.SrcPackageName}}'
-recursive: false
+structname: '{{.InterfaceName}}'
+pkgname: 'mocks'
+recursive: true
+require-template-schema-exists: true
 template: testify
+template-schema: '{{.Template}}.schema.json'
 packages:
-  github.com/vektra/mockery/v3/internal/fixtures:
+  github.com/kelvin950/spread:
     config:
       all: true
