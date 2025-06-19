@@ -52,7 +52,7 @@ func (s Server) GetUserSubs() gin.HandlerFunc {
 
 		if err != nil {
 
-			ctx.JSON(http.StatusOK, gin.H{
+			ctx.JSON(http.StatusBadRequest, gin.H{
 				"error": "Bad Request Error",
 			})
 			return

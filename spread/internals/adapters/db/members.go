@@ -94,7 +94,7 @@ func (d Db) GetUserMembershipsandSubscriptions(userid int) ([]domain.MembershipS
     Select m.user_id as user_id , m.creator_id as creator_id , m.id as membership_id ,
 	c.name as creator_name ,c.header_url as header_url , c.avatar_url  as avatar_url , 
 	s.status as status , s.id as subscription_id , m.created_at as created_at, m.updated_at as updated_at, 
-	s.end_date as end_date ,  s.created_at as start_date 
+	s.end_date as end_date ,  s.created_at as subscription_start_date 
 	from members as m 
 	left join subscriptions as s on m.id= s.member_id
 	left join creators as c on m.creator_id=  c.id 

@@ -20,7 +20,7 @@ func Connect(host, user, password, dbname, port string) (*Db, error) {
 		return nil, err
 	}
 
-	err = db.AutoMigrate(&User{}, &Creator{}, &Members{}, &Subscription{}, &Post{}, &Content{})
+	err = db.AutoMigrate(&User{}, &Creator{}, &Members{}, &Subscription{}, &Post{}, &Content{} , &Topic{})
 
 	if err != nil {
 		return nil, err

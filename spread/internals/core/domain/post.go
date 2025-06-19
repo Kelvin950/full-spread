@@ -9,6 +9,7 @@ type Post struct {
 	Published   bool      `json:"published"`
 	CreatorID   uint      `json:"creator_id"`
 	Content     []Content `json:"content"`
+	Topics      []Topic   `json:"topics"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }
@@ -21,4 +22,12 @@ type Content struct {
 	ManifestFileUrl *string   `json:"manifest_file_url"`
 	CreatedAt       time.Time `json:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at"`
+}
+
+
+type Topic struct{
+	ID  uint   `json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+	Name string `json:"name"`
 }

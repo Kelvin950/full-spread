@@ -23,7 +23,7 @@ func (a Api) UpdateCreator(creator *domain.Creator) error {
 		return err
 	}
 
-	if userCreator.ID != creator.ID {
+	if userCreator.ID!= creator.ID {
 		return domain.ApiError{
 			Code:   401,
 			ErrVal: errors.New("unauthorized"),

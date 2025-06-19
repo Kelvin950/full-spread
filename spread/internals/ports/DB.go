@@ -24,4 +24,5 @@ type Db interface {
 	 UpdatePost(post *domain.Post) error 
 	  CreateContent(content *domain.Content) error
 	  UpdateContent(content *domain.Content) error
+	  CreateContents(contents []domain.Content)([]domain.Content , error)
 }

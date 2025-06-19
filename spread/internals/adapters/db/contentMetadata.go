@@ -14,6 +14,41 @@ type Content struct {
 	ManifestFileUrl *string `gorm:"column:manifest_file"`
 }
 
+func(c Db)CreateContents(contents []domain.Content)([]domain.Content , error){
+	 
+	var newContents = []Content{} 
+
+	for _, cont := range contents {
+		
+			newContents = append(newContents, Content{
+				MimeType:        cont.MimeType,
+				LocationUrl:     cont.LocationUrl,
+				PostID:          cont.ID,
+			
+			})
+	}
+
+	if err:= c.db.Create(&newContents).Error ; err!=nil{
+		return nil , err
+	}
+
+	 var doaminnewContents = []domain.Content{}
+	for _ , newcontent:= range newContents{
+
+		doaminnewContents = append(doaminnewContents, domain.Content{
+			ID:              newcontent.ID,
+			MimeType:        newcontent.MimeType,
+			LocationUrl:     newcontent.LocationUrl,
+			PostID:          newcontent.PostID,
+			
+			CreatedAt:       newcontent.CreatedAt,
+			UpdatedAt:       newcontent.UpdatedAt,
+		})
+	}
+
+	return doaminnewContents, nil
+}
+
 func (c Db) CreateContent(content *domain.Content) error {
 	var newpost = Content{
 		MimeType:        content.MimeType,

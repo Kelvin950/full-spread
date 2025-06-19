@@ -17,6 +17,7 @@ type Creator struct {
 	UserID        uint   `gorm:"column:user_id"`
 	Delete        bool
 	Deactivate    bool
+	Topics []Topic `gorm:"many2many:creators_topics;"`
 	User          User      `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE;"`
 	Members       []Members `gorm:"foreignKey:CreatorId"`
 }
@@ -92,6 +93,7 @@ func (d Db) GetCreator(creator domain.Creator) (domain.Creator, error) {
 			ID:        dbCreator.ID,
 			Name:      dbCreator.Name,
 			HeaderUrl: dbCreator.HeaderUrl,
+			PhoneNumber: dbCreator.PhoneNumber,
 			AvatarUrl: dbCreator.AvatarUrl,
 			CreatedAt: dbCreator.CreatedAt,
 			UpdatedAt: dbCreator.UpdatedAt,
@@ -118,6 +120,7 @@ func (d Db) GetCreator(creator domain.Creator) (domain.Creator, error) {
 		ID:        dbCreator.ID,
 		Name:      dbCreator.Name,
 		HeaderUrl: dbCreator.HeaderUrl,
+		PhoneNumber: dbCreator.PhoneNumber,
 		AvatarUrl: dbCreator.AvatarUrl,
 		CreatedAt: dbCreator.CreatedAt,
 		UpdatedAt: dbCreator.UpdatedAt,

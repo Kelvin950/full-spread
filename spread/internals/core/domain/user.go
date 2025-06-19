@@ -74,6 +74,10 @@ type Subscription struct {
 
 type PostType string
 
+func(p PostType)Value() string {
+	return string(p)
+}
+
 func (p PostType) OneTime() PostType {
 	return "oneTime"
 }

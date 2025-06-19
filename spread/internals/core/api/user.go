@@ -1,12 +1,35 @@
 package api
 
 import (
+	"errors"
 	"time"
 
 	"github.com/kelvin950/spread/internals/core/domain"
 )
 
 func (a Api) CreateUser(user *domain.User, password string) error {
+
+
+   usernameuser , err := a.Db.GetUserByEmailOrUsername(domain.User{
+	Username: user.Username,
+	})
+
+	
+	if err != nil {
+		
+		if _ , ok:= err.(domain.ApiError); !ok{
+			return err
+		}
+
+	}
+
+
+	if usernameuser.ID > 0{
+		return domain.ApiError{
+			Code:    400,
+			ErrVal: errors.New("username already exists"),
+		}
+	}
 
 	uid, err := a.FirebaseCl.CreateUser(user.Email, password)
 

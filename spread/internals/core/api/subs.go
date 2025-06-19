@@ -14,6 +14,7 @@ func (a Api) CreateSubscription(sub *domain.Subscription) error {
 	if err != nil {
 		if _, ok := err.(domain.ApiError); ok {
 			sub.Status = true
+			
 			sub.EndDate = time.Now().Add(time.Hour * 24 * 30)
 			return a.Db.CreateSubscription(sub)
 		}

@@ -264,18 +264,27 @@ func (s *TestSuite) TestreateMember() {
 
 		  s.NoError(err) 
 
-		  
+		  topic:=&domain.Topic{
+			Name: "Test Topic",
+		  }
+		 err = s.Db.CreateTopic(topic)
+		 
+		 s.NoError(err) 
+		 s.NotEmpty(topic.ID)
          var vv domain.PostType
 		post := &domain.Post{
 			Description: "This is a test post",
 			CreatorID: creator.ID,
 			Type:  vv.OneTime(),
 			Published: false ,     
+			Topics: []domain.Topic{
+				*topic,
+			},
 		}
 		err = s.Db.CreatePost(post) 
 
 		s.NoError(err) 
-
+		
 		content:= domain.Content{
 			PostID: post.ID,
 	 		MimeType: "image/png",
@@ -314,8 +323,10 @@ func (s *TestSuite) TestreateMember() {
 	   s.Equal(posts.CreatorID , post.CreatorID) 
 	   s.True(posts.Published)
 	   s.NotEqual(post.Type.Subscription() ,vv.OneTime()) 
-
-	
+	   s.NotEmpty(post.Topics)
+	   s.Equal(posts.Topics[0].Name, topic.Name)
+	  
+	   s.T().Logf("%+v", posts.Topics[0])
 	   s.Equal(posts.Content[0].MimeType, content.MimeType)
 	   s.Equal(posts.Content[0].LocationUrl, content.LocationUrl)
        s.NotEmpty(posts.Content[0].ManifestFileUrl)

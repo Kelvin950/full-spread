@@ -64,3 +64,14 @@ type CreateMemberReq struct {
 type CreateSubReq struct {
 	MembershipID uint `json:"membership_id"`
 }
+type CreatePostReq struct {
+	Description string `json:"description"`
+	Type        string `json:"type"`
+	Topics      []uint `json:"topics"`
+	Content    []CreateContentReq `json:"content"`
+}
+
+type CreateContentReq struct {
+	MimeType        string  `json:"mime_type"`
+	LocationUrl     string  `json:"location_url"`
+}
