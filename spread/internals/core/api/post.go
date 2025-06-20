@@ -1,55 +1,87 @@
 package api
 
-import "github.com/kelvin950/spread/internals/core/domain"
-func(a Api)CreatePost(post *domain.Post ,userId int)error{
+import (
+	"errors"
+	"fmt"
+	"net/http"
 
-	creator , err := a.Db.GetCreator(domain.Creator{
-		UserID:uint(userId) ,
-	})
+	"github.com/kelvin950/spread/internals/core/domain"
+)
 
-	if err != nil {	
-		return err
-	}
-post.CreatorID = creator.ID
-err =a.Db.CreatePost(post)
+func (a Api) CreatePost(post *domain.Post, userId int) error {
 
- if err!=nil{
-	return err 
- }
-
- newContent , err:= a.Db.CreateContents(post.Content)
- if err!=nil{
-	return err 
- }
-
-  post.Content = newContent
- return nil 
-}
-
-func(a Api)GetCreatorPosts(userId ,page , pageSize int)([]domain.Post , error){
-
-  creator , err:= 	a.Db.GetCreator(domain.Creator{
+	creator, err := a.Db.GetCreator(domain.Creator{
 		UserID: uint(userId),
 	})
 
-	if err!=nil{
-		return nil , err 
+	if err != nil {
+		return err
+	}
+	post.CreatorID = creator.ID
+	err = a.Db.CreatePost(post)
+
+	if err != nil {
+		return err
 	}
 
-	return a.Db.GetCreatorPosts(creator.ID , page, pageSize)
+	fmt.Printf("%+v", post)
+
+	return nil
 }
 
+func (a Api) UpdatePost(post *domain.Post, userid uint) error {
 
-func(a Api)GetCreatorPost(userID , postid int)(domain.Post , error){
+	creator, err := a.Db.GetCreator(domain.Creator{
+		UserID: userid,
+	})
 
-	creator ,err:= a.Db.GetCreator(domain.Creator{
+	if err != nil {
+		return err
+	}
+
+	fetchedpost, err := a.Db.GetCreatorPost(creator.ID, post.ID)
+
+	if err != nil {
+		return err
+	}
+
+	if fetchedpost.CreatorID != creator.ID {
+		return domain.ApiError{
+			Code:   http.StatusUnauthorized,
+			ErrVal: errors.New("unauthorized"),
+		}
+	}
+
+	post.CreatorID = creator.ID
+
+	err = a.Db.UpdatePost(post)
+
+	return err
+}
+
+func (a Api) GetCreatorPosts(userId, page, pageSize int) ([]domain.Post, error) {
+
+	creator, err := a.Db.GetCreator(domain.Creator{
+		UserID: uint(userId),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return a.Db.GetCreatorPosts(creator.ID, page, pageSize)
+}
+
+func (a Api) GetCreatorPost(userID, postid int) (domain.Post, error) {
+
+	creator, err := a.Db.GetCreator(domain.Creator{
 		UserID: uint(userID),
 	})
 
-	if err!=nil{
+	if err != nil {
 		return domain.Post{}, err
 	}
 
-	return a.Db.GetCreatorPost(creator.ID ,uint(postid)) 
+	return a.Db.GetCreatorPost(creator.ID, uint(postid))
 
 }

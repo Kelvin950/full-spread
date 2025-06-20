@@ -62,12 +62,13 @@ func (s Server) SubsController(apiV1 *gin.RouterGroup) {
 	subsGroup.GET("/", s.VerifyJwt(), s.GetUserSubs())
 }
 
-func(s Server)PostController(apiV1 *gin.RouterGroup){
-	postGroup := apiV1.Group("/post") 
+func (s Server) PostController(apiV1 *gin.RouterGroup) {
+	postGroup := apiV1.Group("/post")
 
-
-	postGroup.GET("/creator" , s.VerifyJwt(), s.GetCreatorPosts())
-	postGroup.GET("/creator/:postid" , s.VerifyJwt() , s.GetCreatorPost())
+	postGroup.POST("/", s.VerifyJwt(), s.CreatePost())
+	postGroup.PUT("/:postId", s.VerifyJwt(), s.UpdatePost())
+	postGroup.GET("/creator", s.VerifyJwt(), s.GetCreatorPosts())
+	postGroup.GET("/creator/:postid", s.VerifyJwt(), s.GetCreatorPost())
 }
 func (s *Server) Start() {
 
@@ -86,5 +87,6 @@ func (s *Server) Start() {
 	s.CreatorController(apiV1)
 	s.MemberController(apiV1)
 	s.SubsController(apiV1)
+	s.PostController(apiV1)
 	s.Router = router
 }

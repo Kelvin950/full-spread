@@ -258,6 +258,63 @@ func (_c *Api_CreateMultiPartUpload_Call) RunAndReturn(run func(data domain.Crea
 	return _c
 }
 
+// CreatePost provides a mock function for the type Api
+func (_mock *Api) CreatePost(post *domain.Post, userId int) error {
+	ret := _mock.Called(post, userId)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CreatePost")
+	}
+
+	var r0 error
+	if returnFunc, ok := ret.Get(0).(func(*domain.Post, int) error); ok {
+		r0 = returnFunc(post, userId)
+	} else {
+		r0 = ret.Error(0)
+	}
+	return r0
+}
+
+// Api_CreatePost_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreatePost'
+type Api_CreatePost_Call struct {
+	*mock.Call
+}
+
+// CreatePost is a helper method to define mock.On call
+//   - post *domain.Post
+//   - userId int
+func (_e *Api_Expecter) CreatePost(post interface{}, userId interface{}) *Api_CreatePost_Call {
+	return &Api_CreatePost_Call{Call: _e.mock.On("CreatePost", post, userId)}
+}
+
+func (_c *Api_CreatePost_Call) Run(run func(post *domain.Post, userId int)) *Api_CreatePost_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 *domain.Post
+		if args[0] != nil {
+			arg0 = args[0].(*domain.Post)
+		}
+		var arg1 int
+		if args[1] != nil {
+			arg1 = args[1].(int)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *Api_CreatePost_Call) Return(err error) *Api_CreatePost_Call {
+	_c.Call.Return(err)
+	return _c
+}
+
+func (_c *Api_CreatePost_Call) RunAndReturn(run func(post *domain.Post, userId int) error) *Api_CreatePost_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // CreatePresignMultiPart provides a mock function for the type Api
 func (_mock *Api) CreatePresignMultiPart(data []domain.UplaodMultiPart) ([]domain.UplaodMultiPartApiRes, error) {
 	ret := _mock.Called(data)

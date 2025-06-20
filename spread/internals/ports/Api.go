@@ -24,5 +24,6 @@ type Api interface {
 	GetUserSubscription(membershipid int) (domain.Subscription, error)
 	GetCreatorPost(userID, postid int) (domain.Post, error)
 	GetCreatorPosts(userId, page, pageSize int) ([]domain.Post, error)
-	CreatePost(post *domain.Post ,userId int)error
+	UpdatePost(post *domain.Post, userid uint) error
+	CreatePost(post *domain.Post, userId int) error
 }

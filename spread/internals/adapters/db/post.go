@@ -27,10 +27,19 @@ func (p Db) CreatePost(post *domain.Post) error {
 		CreatorID:   post.CreatorID,
 	}
 
-	for _ , topic:= range post.Topics {
+	for _, topic := range post.Topics {
 		t := Topic{}
 		t.ID = topic.ID
-		newpost.Topic = append(newpost.Topic,t)
+		newpost.Topic = append(newpost.Topic, t)
+	}
+
+	for _, content := range post.Content {
+		c := Content{
+			MimeType:    content.MimeType,
+			LocationUrl: content.LocationUrl,
+		}
+
+		newpost.Content = append(newpost.Content, c)
 	}
 	result := p.db.Create(&newpost)
 
@@ -72,8 +81,8 @@ func (p Db) GetCreatorPosts(creatorid uint, page, pagesize int) ([]domain.Post, 
 			})
 		}
 
-		 Topic:= []domain.Topic{}
-		for _ , topic := range post.Topic{
+		Topic := []domain.Topic{}
+		for _, topic := range post.Topic {
 			Topic = append(Topic, domain.Topic{
 				ID:        topic.ID,
 				Name:      topic.Name,
@@ -90,7 +99,7 @@ func (p Db) GetCreatorPosts(creatorid uint, page, pagesize int) ([]domain.Post, 
 			CreatedAt:   post.CreatedAt,
 			UpdatedAt:   post.UpdatedAt,
 			Content:     Content,
-			Topics: Topic,
+			Topics:      Topic,
 		})
 
 	}
@@ -131,15 +140,15 @@ func (p Db) GetCreatorPost(creatorid uint, postid uint) (domain.Post, error) {
 		})
 	}
 
-	 Topic:= []domain.Topic{}
-		for _ , topic := range post.Topic{
-			Topic = append(Topic, domain.Topic{
-				ID:        topic.ID,
-				Name:      topic.Name,
-				CreatedAt: topic.CreatedAt,
-				UpdatedAt: topic.UpdatedAt,
-			})
-		}
+	Topic := []domain.Topic{}
+	for _, topic := range post.Topic {
+		Topic = append(Topic, domain.Topic{
+			ID:        topic.ID,
+			Name:      topic.Name,
+			CreatedAt: topic.CreatedAt,
+			UpdatedAt: topic.UpdatedAt,
+		})
+	}
 	return domain.Post{
 		ID:          post.ID,
 		CreatorID:   post.CreatorID,
@@ -149,7 +158,7 @@ func (p Db) GetCreatorPost(creatorid uint, postid uint) (domain.Post, error) {
 		Type:        post.Type,
 		Published:   post.Published,
 		Content:     content,
-		Topics: Topic,
+		Topics:      Topic,
 	}, nil
 }
 

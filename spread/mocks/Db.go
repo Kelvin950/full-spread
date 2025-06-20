@@ -87,6 +87,68 @@ func (_c *Db_CreateContent_Call) RunAndReturn(run func(content *domain.Content) 
 	return _c
 }
 
+// CreateContents provides a mock function for the type Db
+func (_mock *Db) CreateContents(contents []domain.Content) ([]domain.Content, error) {
+	ret := _mock.Called(contents)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CreateContents")
+	}
+
+	var r0 []domain.Content
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func([]domain.Content) ([]domain.Content, error)); ok {
+		return returnFunc(contents)
+	}
+	if returnFunc, ok := ret.Get(0).(func([]domain.Content) []domain.Content); ok {
+		r0 = returnFunc(contents)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]domain.Content)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func([]domain.Content) error); ok {
+		r1 = returnFunc(contents)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// Db_CreateContents_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateContents'
+type Db_CreateContents_Call struct {
+	*mock.Call
+}
+
+// CreateContents is a helper method to define mock.On call
+//   - contents []domain.Content
+func (_e *Db_Expecter) CreateContents(contents interface{}) *Db_CreateContents_Call {
+	return &Db_CreateContents_Call{Call: _e.mock.On("CreateContents", contents)}
+}
+
+func (_c *Db_CreateContents_Call) Run(run func(contents []domain.Content)) *Db_CreateContents_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 []domain.Content
+		if args[0] != nil {
+			arg0 = args[0].([]domain.Content)
+		}
+		run(
+			arg0,
+		)
+	})
+	return _c
+}
+
+func (_c *Db_CreateContents_Call) Return(contents1 []domain.Content, err error) *Db_CreateContents_Call {
+	_c.Call.Return(contents1, err)
+	return _c
+}
+
+func (_c *Db_CreateContents_Call) RunAndReturn(run func(contents []domain.Content) ([]domain.Content, error)) *Db_CreateContents_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // CreateCreator provides a mock function for the type Db
 func (_mock *Db) CreateCreator(creator *domain.Creator) error {
 	ret := _mock.Called(creator)

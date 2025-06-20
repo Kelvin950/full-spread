@@ -1,5 +1,7 @@
 package server
 
+import "github.com/kelvin950/spread/internals/core/domain"
+
 type CreateMultiPartUploadReq struct {
 	Key        string `json:"key" binding:"required"`
 	BucketName string `json:"bucket_name" binding:"required"`
@@ -65,13 +67,19 @@ type CreateSubReq struct {
 	MembershipID uint `json:"membership_id"`
 }
 type CreatePostReq struct {
-	Description string `json:"description"`
-	Type        string `json:"type"`
-	Topics      []uint `json:"topics"`
-	Content    []CreateContentReq `json:"content"`
+	Description string             `json:"description"`
+	Type        string             `json:"type"`
+	Topics      []uint             `json:"topics"`
+	Content     []CreateContentReq `json:"content"`
 }
 
 type CreateContentReq struct {
-	MimeType        string  `json:"mime_type"`
-	LocationUrl     string  `json:"location_url"`
+	MimeType    string `json:"mime_type"`
+	LocationUrl string `json:"location_url"`
+}
+
+type updatePostReq struct {
+	ID      uint            `json:"id"`
+	Publish bool            `json:"publish"`
+	Type    domain.PostType `json:"type"`
 }

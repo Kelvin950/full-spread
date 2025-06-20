@@ -9,24 +9,22 @@ import (
 
 func (a Api) CreateUser(user *domain.User, password string) error {
 
-
-   usernameuser , err := a.Db.GetUserByEmailOrUsername(domain.User{
-	Username: user.Username,
+	usernameuser, err := a.Db.GetUserByEmailOrUsername(domain.User{
+		Username: user.Username,
+		Email:    user.Email,
 	})
 
-	
 	if err != nil {
-		
-		if _ , ok:= err.(domain.ApiError); !ok{
+
+		if _, ok := err.(domain.ApiError); !ok {
 			return err
 		}
 
 	}
 
-
-	if usernameuser.ID > 0{
+	if usernameuser.ID > 0 {
 		return domain.ApiError{
-			Code:    400,
+			Code:   400,
 			ErrVal: errors.New("username already exists"),
 		}
 	}

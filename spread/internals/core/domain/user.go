@@ -74,7 +74,7 @@ type Subscription struct {
 
 type PostType string
 
-func(p PostType)Value() string {
+func (p PostType) Value() string {
 	return string(p)
 }
 
@@ -83,9 +83,9 @@ func (p PostType) OneTime() PostType {
 }
 
 func (p PostType) Free() PostType {
-	return "Free"
+	return "free"
 }
 
 func (p PostType) Subscription() PostType {
-	return "Subs"
+	return "subscription"
 }
